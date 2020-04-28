@@ -63,6 +63,7 @@ public class CubeShipPilot : MonoBehaviour
     [SerializeField] public GameObject DeathExplosionPrefab;
     
     private bool ShouldMove;
+    private AudioSource ThrusterAudioEmitter;
 
     /// <summary>
     /// Register event handlers
@@ -75,6 +76,7 @@ public class CubeShipPilot : MonoBehaviour
         EventManager.onGameEnd += OnGameEnd;
 
         InvokeRepeating("Accelerate", 0.1f, 0.1f);
+        ThrusterAudioEmitter = GetComponent<AudioSource>();
     }
 
     /// <summary>
@@ -102,6 +104,10 @@ public class CubeShipPilot : MonoBehaviour
 
             // Modify max speed as a function of gametime
             Difficulty = (GameManager.Instance.ElapsedTimeSecs * 0.001f);
+
+            // If AudioSource is attached, modify the pitch based on speed
+            if (ThrusterAudioEmitter != null)
+                ThrusterAudioEmitter.pitch = (ShipSpeed / AbsoluteSpeedMax) * 2.5f;
         }
 
         // If we're out of hull strength, end the game.
