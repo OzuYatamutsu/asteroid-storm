@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// What is the player's current score?
     /// </summary>
-    public uint Score {get; private set;}
+    public uint Score;
     [SerializeField] public uint ScorePerQuarterSec = 5;
 
     /// <summary>

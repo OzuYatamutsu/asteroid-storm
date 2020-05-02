@@ -164,6 +164,35 @@ public class CubeShipPilot : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// What happens when we hit something with a trigger (e.g. a powerup?)
+    /// </summary>
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!other.gameObject.name.StartsWith("Powerup"))
+            return;
+
+        // Pick up the powerup! Increase player's health (if not already at max).
+        HullStrength += 20;
+        if (HullStrength > 100f)
+            HullStrength = 100f;
+        
+        // Increase the player's score by 5%.
+        GameManager.Instance.Score = (uint) Mathf.RoundToInt(GameManager.Instance.Score * 1.05f);
+    }
+
+    /// <summary>
+    /// What happens after we hit something with a trigger?
+    /// </summary>
+    private void OnTriggerExit(Collider other)
+    {       
+        if (!other.gameObject.name.StartsWith("Powerup"))
+            return;
+
+        // Powerup has done its job, so remove this object
+        Destroy(other.gameObject);
+    }
+
     private void SetNotInvincible()
     {
         if (IsInvincible)

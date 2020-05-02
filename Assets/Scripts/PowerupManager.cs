@@ -56,11 +56,17 @@ public class PowerupManager : MonoBehaviour
         if (SpawningEnabled)
         {
             // Despawn powerups if necessary
+            ActivePowerups.RemoveAll(powerup => powerup == null);
             foreach (PowerupController powerup in GetPowerupsToDespawn())
                 DespawnPowerup(powerup);
 
             // Spawn powerups if necessary
             SpawnPowerups();
+        }
+        else
+        {
+            // Start spawning powerups after 10 sec of elapsed game time
+            SpawningEnabled = GameManager.Instance.ElapsedTimeSecs > 10;
         }
     }
 
@@ -73,7 +79,6 @@ public class PowerupManager : MonoBehaviour
         if (_rand.Next(1, 100) < 99)
             return;
 
-        Debug.Log("Spawning powerup!");
         SpawnPowerup();
     }
 
@@ -143,7 +148,8 @@ public class PowerupManager : MonoBehaviour
 
     private void OnGameStart()
     {
-        SpawningEnabled = true;
+        // Don't spawn immediately when the game is started.
+        SpawningEnabled = false;
     }
 
     private void OnGamePausedOrEnded()

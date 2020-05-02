@@ -13,11 +13,15 @@ public class PowerupController : MonoBehaviour
     /// </summary>
     private bool ShouldMove;
 
+    private AudioSource PickupSoundEffect;
+
     private void OnEnable()
     {
         EventManager.onGameStart += OnGameResumeOrStarted;
         EventManager.onGamePaused += OnGamePaused;
         EventManager.onGameResume += OnGameResumeOrStarted;
+
+        PickupSoundEffect = GetComponent<AudioSource>();
     }
 
     private void OnDisable()
@@ -78,6 +82,24 @@ public class PowerupController : MonoBehaviour
     /// Called once per frame.
     /// </summary>
     void Update() {}
+
+    /// <summary>
+    /// Play sound effect when the powerup is hit.
+    /// </summary>
+    private void OnTriggerEnter(Collider other)
+    {
+        if (PickupSoundEffect == null)
+            return;
+        if (!other.gameObject.name.StartsWith("PlayerShip"))
+            return;
+
+        // Play pickup sound effect at player position
+        AudioSource.PlayClipAtPoint(
+            PickupSoundEffect.clip,
+            GameManager.Instance.PlayerShip.transform.position,
+            2  // Volume
+        );
+    }
 
     void OnDestroy()
     {
